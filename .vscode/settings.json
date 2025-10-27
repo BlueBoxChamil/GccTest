@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.vue": "html",
+        "*.css": "tailwindcss",
+        "lib1_func.h": "c",
+        "test1.h": "c"
+    }
+}
