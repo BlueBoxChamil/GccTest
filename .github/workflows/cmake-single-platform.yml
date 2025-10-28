@@ -32,12 +32,12 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    # 获取构建目录中的可执行文件
+# 获取构建目录中的可执行文件
     - name: Get executable name
       id: get_exec_name
       run: |
-        # 获取构建目录中的可执行文件
-        EXEC_NAME=$(ls ${{github.workspace}}/build | grep -E '.*\.out$' || echo "Project")
+        # 获取 CMake 配置中设置的目标名称 (即可执行文件名称)
+        EXEC_NAME=$(cmake -LAH | grep "TARGET_NAME" | awk '{print $3}' || echo "Project")
         echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV  # 将 EXEC_NAME 环境变量传递给后续步骤
 
     # 运行动态获取的可执行文件
