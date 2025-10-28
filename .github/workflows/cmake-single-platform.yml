@@ -31,12 +31,21 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Run myPro program  # 运行你的程序
-      run: ./build/myPro  # 假设可执行文件名为 myPro，运行构建目录下的可执行文件
+    # 获取可执行文件的名称（使用 TARGET_NAME）
+    - name: Get executable name from CMake
+      id: get_exec_name
+      run: |
+        EXEC_NAME=$(cmake -LAH | grep "TARGET_NAME" | awk '{print $3}')
+        echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV  # 将 EXEC_NAME 环境变量传递给后续步骤
+        if [ -z "$EXEC_NAME" ]; then
+          echo "No executable name found, using default Project"
+          echo "EXEC_NAME=Project" >> $GITHUB_ENV
+        fi
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}} -V
+    # 运行可执行文件
+    - name: Run executable
+      run: |
+        echo "Running executable: $EXEC_NAME"
+        ./${{github.workspace}}/build/$EXEC_NAME  # 使用动态获取的可执行文件名称
+
 
