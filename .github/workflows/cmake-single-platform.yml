@@ -31,6 +31,9 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Run myPro program  # 运行你的程序
+      run: ./build/myPro  # 假设可执行文件名为 myPro，运行构建目录下的可执行文件
+
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
