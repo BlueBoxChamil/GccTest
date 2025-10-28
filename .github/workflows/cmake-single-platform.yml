@@ -44,5 +44,6 @@ jobs:
     - name: Run executable
       run: |
         echo "Running executable: $EXEC_NAME"
+        # 确保路径正确，避免出现 // 之类的问题
         ./${{github.workspace}}/build/$EXEC_NAME  # 使用动态获取的可执行文件名称
 
