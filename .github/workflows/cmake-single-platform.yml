@@ -36,9 +36,10 @@ jobs:
     - name: Get executable name
       id: get_exec_name
       run: |
-        # 检查构建目录中以可执行文件为后缀的文件
-        EXEC_NAME=$(ls ${{github.workspace}}/build | grep -E '.*\.(out|exe|bin)$' | head -n 1 || echo "Project")
+        # 使用 find 查找没有扩展名的可执行文件
+        EXEC_NAME=$(find ${{github.workspace}}/build -maxdepth 1 -type f -executable | head -n 1 | xargs -n 1 basename || echo "Project")
         echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV  # 将 EXEC_NAME 环境变量传递给后续步骤
+
 
     # 列出构建目录中的文件，帮助调试
     - name: List files in build directory
