@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-# project(myPro VERSION 0.1.0 LANGUAGES C CXX)
+project(myPro4 VERSION 0.1.0 LANGUAGES C CXX)
 
 # 设置项目名字
 set(TARGET_NAME ${PROJECT_NAME})
