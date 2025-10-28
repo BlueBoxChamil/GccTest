@@ -44,6 +44,9 @@ jobs:
     - name: Run executable
       run: |
         echo "Running executable: $EXEC_NAME"
-        # 确保路径正确，避免出现 // 之类的问题
-        ./${{github.workspace}}/build/$EXEC_NAME  # 使用动态获取的可执行文件名称
+        # 确保路径拼接正确，避免多余的斜杠
+        EXEC_PATH="${{github.workspace}}/build/$EXEC_NAME"
+        echo "Full executable path: $EXEC_PATH"
+        ./$EXEC_PATH  # 使用拼接后的正确路径
+
 
