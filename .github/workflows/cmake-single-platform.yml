@@ -31,12 +31,13 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    # 获取可执行文件的名称（使用 TARGET_NAME）
+     # 获取可执行文件的名称（使用 TARGET_NAME）
     - name: Get executable name from CMake
       id: get_exec_name
       run: |
-        EXEC_NAME=$(cmake -LAH | grep "TARGET_NAME" | awk '{print $3}')
-        echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV  # 将 EXEC_NAME 环境变量传递给后续步骤
+        # 通过 CMake 输出获取 TARGET_NAME
+        EXEC_NAME=$(cmake -S . -B ${{github.workspace}}/build -P get_target_name.cmake)
+        echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV
         if [ -z "$EXEC_NAME" ]; then
           echo "No executable name found, using default Project"
           echo "EXEC_NAME=Project" >> $GITHUB_ENV
