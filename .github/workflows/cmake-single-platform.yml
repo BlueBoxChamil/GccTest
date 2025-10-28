@@ -1,3 +1,4 @@
+
 # This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
 name: CMake on a single platform
@@ -31,25 +32,15 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-     # 获取可执行文件的名称（使用 TARGET_NAME）
-    - name: Get executable name from CMake
+    # 获取构建目录中的可执行文件
+    - name: Get executable name
       id: get_exec_name
       run: |
-        # 创建临时的 CMake 脚本并获取可执行文件名
-        echo "get_target_property(EXEC_NAME ${PROJECT_NAME} LOCATION)" > get_target_name.cmake
-        echo "message(STATUS \"Executable name: ${EXEC_NAME}\")" >> get_target_name.cmake
-        cmake -S . -B ${{github.workspace}}/build -P get_target_name.cmake
-        
-        # 从 CMake 输出中获取可执行文件的路径
-        EXEC_NAME=$(cat ${{github.workspace}}/build/exec_name.txt)
+        # 获取构建目录中的可执行文件
+        EXEC_NAME=$(ls ${{github.workspace}}/build | grep -E '.*\.out$' || echo "Project")
         echo "EXEC_NAME=$EXEC_NAME" >> $GITHUB_ENV  # 将 EXEC_NAME 环境变量传递给后续步骤
-        
-        if [ -z "$EXEC_NAME" ]; then
-          echo "No executable name found, using default Project"
-          echo "EXEC_NAME=Project" >> $GITHUB_ENV
-        fi
 
-    # 运行可执行文件
+    # 运行动态获取的可执行文件
     - name: Run executable
       run: |
         echo "Running executable: $EXEC_NAME"
